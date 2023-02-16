@@ -67,7 +67,7 @@ class DAE(Disaggregator):
             print("Started Retraining model for", appliance_name)
             model = self.models[appliance_name]
             filepath = self.file_prefix + "-{}-epoch{}.h5".format(
-                    "_".join(appliance_name.split()),
+                    "_".join(str(appliance_name).split()),
                     current_epoch,
             )
             checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True, mode='min')

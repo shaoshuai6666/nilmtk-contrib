@@ -70,7 +70,7 @@ class RNN(Disaggregator):
                 if len(train_main) > 10:
                     # Do validation when you have sufficient samples
                     filepath = self.file_prefix + "-{}-epoch{}.h5".format(
-                            "_".join(appliance_name.split()),
+                            "_".join(str(appliance_name).split()),
                             current_epoch,
                     )
                     checkpoint = ModelCheckpoint(filepath,monitor='val_loss',verbose=1,save_best_only=True,mode='min')

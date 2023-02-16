@@ -25,8 +25,8 @@ class Seq2Seq(Disaggregator):
         self.sequence_length = params.get('sequence_length',99)
         self.n_epochs = params.get('n_epochs', 10)
         self.models = OrderedDict()
-        self.mains_mean = 1800
-        self.mains_std = 600
+        self.mains_mean = params.get('mains_mean',1800)
+        self.mains_std = params.get('mains_std',600)
         self.batch_size = params.get('batch_size',512)
         self.appliance_params = params.get('appliance_params',{})
         if self.sequence_length%2==0:
@@ -64,7 +64,7 @@ class Seq2Seq(Disaggregator):
                 if len(train_main) > 10:
                     # Do validation when you have sufficient samples
                     filepath = self.file_prefix + "-{}-epoch{}.h5".format(
-                            "_".join(appliance_name.split()),
+                            "_".join(str(appliance_name).split()),
                             current_epoch,
                     )
                     checkpoint = ModelCheckpoint(filepath,monitor='val_loss',verbose=1,save_best_only=True,mode='min')
