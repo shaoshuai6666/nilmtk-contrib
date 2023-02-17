@@ -7,7 +7,7 @@ from collections import OrderedDict
 from tensorflow.keras.optimizers import SGD
 from tensorflow.keras.models import Sequential
 import matplotlib.pyplot as  plt
-from tensorflow.keras.callbacks import ModelCheckpoint
+from tensorflow.keras.callbacks import ModelCheckpoint,EarlyStopping
 import tensorflow.keras.backend as K
 from statistics import mean
 import os
@@ -70,13 +70,14 @@ class DAE(Disaggregator):
                     "_".join(str(appliance_name).split()),
                     current_epoch,
             )
+            earlystopping = EarlyStopping(monitor='val_loss', verbose=1, patience=10)
             checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True, mode='min')
             model.fit(
                     train_main, power,
                     validation_split=.15,
                     batch_size=self.batch_size,
                     epochs=self.n_epochs,
-                    callbacks=[ checkpoint ],
+                    callbacks=[ checkpoint ,earlystopping],
                     shuffle=True,
             )
             model.load_weights(filepath)

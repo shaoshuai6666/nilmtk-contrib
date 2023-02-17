@@ -2,7 +2,7 @@ from collections import OrderedDict
 import numpy as np
 import pandas as pd
 from nilmtk.disaggregate import Disaggregator
-from tensorflow.keras.callbacks import ModelCheckpoint
+from tensorflow.keras.callbacks import ModelCheckpoint,EarlyStopping
 from tensorflow.keras.layers import Dense, Conv1D, GRU, Bidirectional, Dropout
 from tensorflow.keras.models import Sequential
 
@@ -49,13 +49,14 @@ class WindowGRU(Disaggregator):
                     "_".join(str(appliance_name).split()),
                     current_epoch,
             )
+            earlystopping = EarlyStopping(monitor='val_loss', verbose=1, patience=10)
             checkpoint = ModelCheckpoint(filepath,monitor='val_loss',verbose=1,save_best_only=True,mode='min')
             model.fit(
                     mains, app_reading,
                     validation_split=.15,
                     epochs=self.n_epochs,
                     batch_size=self.batch_size,
-                    callbacks=[ checkpoint ],
+                    callbacks=[ checkpoint,earlystopping],
                     shuffle=True,
             )
             model.load_weights(filepath)

@@ -15,7 +15,7 @@ from keras.models import Sequential, load_model
 from keras.layers import Layer,MultiHeadAttention,LayerNormalization,Embedding
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
-from keras.callbacks import ModelCheckpoint
+from tensorflow.keras.callbacks import ModelCheckpoint,EarlyStopping
 import keras.backend as K
 import random
 random.seed(10)
@@ -157,7 +157,8 @@ class BERT(Disaggregator):
                     filepath = 'BERT-temp-weights-'+str(random.randint(0,100000))+'.h5'
                     checkpoint = ModelCheckpoint(filepath,monitor='val_loss',verbose=1,save_best_only=True,mode='min')
                     train_x, v_x, train_y, v_y = train_test_split(train_main, power, test_size=.15,random_state=10)
-                    model.fit(train_x,train_y,validation_data=(v_x,v_y),epochs=self.n_epochs,callbacks=[checkpoint],batch_size=self.batch_size)
+                    earlystopping = EarlyStopping(monitor='val_loss', verbose=1, patience=10)
+                    model.fit(train_x,train_y,validation_data=(v_x,v_y),epochs=self.n_epochs,callbacks=[checkpoint,earlystopping],batch_size=self.batch_size)
                     model.load_weights(filepath)
 
     def disaggregate_chunk(self,test_main_list,model=None,do_preprocessing=True):
