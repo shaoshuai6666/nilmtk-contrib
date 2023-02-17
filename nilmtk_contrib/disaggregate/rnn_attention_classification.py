@@ -3,7 +3,7 @@ from warnings import warn
 from nilmtk.disaggregate import Disaggregator
 from keras.layers import Conv1D, Dense, Dropout, Reshape, Flatten, Bidirectional, LSTM, Input, Multiply, Activation, Add
 from keras.layers.convolutional import Conv2D, ZeroPadding1D,MaxPooling1D
-from keras.layers.normalization import BatchNormalization
+from tensorflow.keras.layers import BatchNormalization
 from keras.layers import Layer
 from keras import Model
 import os
