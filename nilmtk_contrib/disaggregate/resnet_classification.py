@@ -430,6 +430,9 @@ class ResNet_classification(Disaggregator):
             if app_std<1:
                 app_std = 100
             self.appliance_params.update({app_name:{'mean':app_mean,'std':app_std,'min':app_min,'max':app_max}})
+            
+    
+    
 
     
     

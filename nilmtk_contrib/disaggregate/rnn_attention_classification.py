@@ -11,7 +11,7 @@ import pickle
 import pandas as pd
 import numpy as np
 from collections import OrderedDict
-from keras.optimizers import SGD
+from keras.optimizers import SGD,Adam
 from keras.losses import BinaryCrossentropy,MeanSquaredError
 from keras.models import Sequential, load_model
 import matplotlib.pyplot as plt
@@ -339,7 +339,7 @@ class RNN_attention_classification(Disaggregator):
         full_model = Model(inputs=input_data, outputs=[output, classification_output], name="RNN_attention_classification")
         attention_model = Model(inputs=input_data, outputs=weights)
         
-        optimizer = SGD(learning_rate=0.01, momentum=0.9)
+        optimizer = Adam(learning_rate=0.001)
         full_model.summary()
         #Two outputs of the model the classification output and the final output
         full_model.compile(optimizer=optimizer, loss={"output": MeanSquaredError(),"classification_output": BinaryCrossentropy()})
@@ -378,7 +378,8 @@ class RNN_attention_classification(Disaggregator):
                 new_mains = np.array([new_mains[i:i + n] for i in range(len(new_mains) - n + 1)])
                 #new_mains=(new_mains-self.mains_params['mean'])/self.mains_params['std']
                 #new_mains=(new_mains-self.mains_params['min'])/(self.mains_params['max']-self.mains_params['min'])
-                new_mains = (new_mains - self.mains_mean) / self.mains_std
+                # new_mains = (new_mains - self.mains_mean) / self.mains_std
+                new_mains = (new_mains - new_mains.mean()) / new_mains.std()
                 processed_mains_lst.append(pd.DataFrame(new_mains))
             #new_mains = pd.DataFrame(new_mains)
             appliance_list = []
@@ -418,7 +419,8 @@ class RNN_attention_classification(Disaggregator):
                 units_to_pad = n // 2
                 #new_mains = np.pad(new_mains, (units_to_pad,units_to_pad),'constant',constant_values = (0,0))
                 new_mains = np.array([new_mains[i:i + n] for i in range(len(new_mains) - n + 1)])
-                new_mains = (new_mains - self.mains_mean) / self.mains_std
+                # new_mains = (new_mains - self.mains_mean) / self.mains_std
+                new_mains = (new_mains - new_mains.mean()) / new_mains.std()
                 new_mains = new_mains.reshape((-1, self.sequence_length))
                 processed_mains_lst.append(pd.DataFrame(new_mains))
             return processed_mains_lst

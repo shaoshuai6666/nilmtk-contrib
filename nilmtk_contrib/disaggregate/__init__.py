@@ -12,3 +12,6 @@ from .rnn_attention_classification import RNN_attention_classification
 from .resnet import ResNet
 from .resnet_classification import ResNet_classification
 from .bert import BERT
+from .tcn_attention_classification import TCN_attention_classification
+from .cnn_attention_classification import CNN_attention_classification
+from .sgn_classification import SGN_classification
